@@ -8,7 +8,7 @@ import pynotify
 
 
 def getCookie(url):
-    #url="https://mypage.etisalat.lk/bbportal/pkg"
+    """get session values from the specified url"""
     req = requests.get(url)
     cookie=req.headers['set-cookie']
     cookie=cookie.partition(";")[0].partition("=")[2]
@@ -18,6 +18,7 @@ def getCookie(url):
 
 
 def getDom(url):
+    """get the dom for the specified url"""
     value=getCookie(url)
     cookies=dict(JSESSIONID=value)
 
@@ -28,16 +29,7 @@ def getDom(url):
 
 
 def scrapData(dom):
-    # current_data=dom.cssselect("#usageValUsed")
-    # #print current_data[0].text_content().strip()
-
-    # percentage=dom.cssselect("#usageValPercent")
-    # #print percentage[0].text_content().strip()
-
-    # #last_month=dom.
-    #total_due=dom.cssselect("#totalDue")
-    #print total_due[0].text_content().strip()
-
+    """scrap the dom for the required set of data"""
 
     id_list=["#usageValUsed","#usageValPercent","#creditLimit","#totalDue","#lastBill","#dataRate","#dataQuota","#msisdn"]
 
@@ -47,6 +39,7 @@ def scrapData(dom):
 
 
 def notify(data):
+    """notify the user with a simple pop-up message"""
     pynotify.init("Basic")
     text="Current data usage: %s (%s%%) \nTotal Due amount: %s\n" %(data["#usageValUsed"],data["#usageValPercent"],data["#totalDue"])
 
@@ -63,9 +56,5 @@ def main():
     data=scrapData(dom)
     notify(data)
 
-main()
-
-# def not_main():
-#     url="https://mypage.etisalat.lk/bbportal/pkg"
-#     req = requests.get(url)
-#     print req.status_code
+if __name__=='__main__':
+    main()
